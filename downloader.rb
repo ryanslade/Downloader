@@ -4,6 +4,7 @@ require "open-uri"
 require 'net/http'
 
 MINUTES = 5
+SHOWS = [/apprentice/, /chuck/]
 done = false
 
 while !done
@@ -11,7 +12,7 @@ while !done
   puts "Downloading feed..."
   rss = SimpleRSS.parse open("http://tvrss.net/feed/eztv/")
 
-  rss.items.select { |i| /apprentice/ =~ i.title.downcase }.each do |i|
+  rss.items.select { |i| SHOWS.any? { |s| s =~ i.title.downcase } }.each do |i|
     
     filename = "#{i.title}.torrent"
 
@@ -22,11 +23,10 @@ while !done
         file.write(Net::HTTP.get(URI.parse(i.link)))
       end
     end
-
-    done = true
+    
   end
 
-  puts "Item not found, sleeping for #{MINUTES} minutes"
+  puts "Sleeping for #{MINUTES} minutes"
   sleep 60*MINUTES
 
 end
