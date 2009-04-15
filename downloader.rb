@@ -3,13 +3,25 @@ require "simple-rss"
 require "open-uri"
 require 'net/http'
 
-rss = SimpleRSS.parse open("http://tvrss.net/feed/eztv/")
+MINUTES = 5
+done = false
 
-puts rss.channel.title
+while !done
 
-item = rss.items[0]
+  puts "Downloading..."
+  rss = SimpleRSS.parse open("http://tvrss.net/feed/eztv/")
 
-open(item.title+".torrent", "wb") { |file|
-  file.write(Net::HTTP.get(URI.parse(item.link)))
- }
- 
+  rss.items.select { |i| /apprentice/ =~ i.title.downcase }.each do |i|
+    puts "Item found! Downloading..."
+    
+    open(i.title+".torrent", "wb") do |file|
+      file.write(Net::HTTP.get(URI.parse(i.link)))
+    end
+    
+    done = true
+  end
+  
+  puts "Item not found, sleeping for #{MINUTES} minutes"
+  sleep 60*MINUTES
+
+end
