@@ -1,8 +1,4 @@
-require "rubygems"
-require "simple-rss"
-require "open-uri"
-require 'net/http'
-require 'datamapper'
+%w(rubygems simple-rss open-uri net/http datamapper).each { |lib| require lib }
 
 class Show
   
@@ -16,8 +12,8 @@ end
 DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
 
-MINUTES = 5
-SHOWS = [/apprentice/, /30\.rock/, /dollhouse/, /gossip/]
+MINUTES = 10
+SHOWS = [/apprentice.*uk/, /30.*rock/, /dollhouse/, /gossip.*girl/, /how.*met.*your.*mother.*/]
 done = false
 
 while !done
