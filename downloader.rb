@@ -13,7 +13,8 @@ DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
 
 MINUTES = 10
-SHOWS = [/apprentice.*uk/, /30.*rock/, /dollhouse/, /gossip.*girl/, /how.*met.*your.*mother.*/]
+SHOWS = [/apprentice.*uk/, /30.*rock/, /dollhouse/, /gossip.*girl/, /how.*met.*your.*mother.*/, /big.*bang.*theory.*/, /entourage/]
+IGNORE = [/720/]
 done = false
 
 httpauth = Twitter::HTTPAuth.new("sologigolos", "Tw1tt3r17")
@@ -23,7 +24,7 @@ while !done
 
   begin
     puts "Downloading feed..."
-    rss = SimpleRSS.parse open("http://tvrss.net/feed/eztv/")
+    rss = SimpleRSS.parse open("http://www.mininova.org/rss.xml?user=EZTV")
 
     rss.items.select { |i| SHOWS.any? { |s| s =~ i.title.downcase } }.each do |i|
 
