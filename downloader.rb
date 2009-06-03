@@ -1,4 +1,4 @@
-%w(rubygems simple-rss open-uri net/http datamapper twitter).each { |lib| require lib }
+%w(rubygems rss/1.0 rss/2.0 open-uri net/http datamapper twitter).each { |lib| require lib }
 
 class Show
 
@@ -13,7 +13,7 @@ DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
 
 MINUTES = 10
-SHOWS = [/apprentice.*uk/, /30.*rock/, /dollhouse/, /gossip.*girl/, /how.*met.*your.*mother.*/, /big.*bang.*theory.*/, /entourage/]
+SHOWS = [/apprentice.*uk/, /30.*rock/, /dollhouse/, /gossip.*girl/, /how.*met.*your.*mother.*/, /big.*bang.*theory.*/, /entourage/, /true.*blood/]
 IGNORE = [/720/]
 done = false
 
@@ -24,7 +24,7 @@ while !done
 
   begin
     puts "Downloading feed..."
-    rss = SimpleRSS.parse open("http://www.mininova.org/rss.xml?user=EZTV")
+    rss = RSS::Parser.parse(open("http://www.mininova.org/rss.xml?user=EZTV"), false)
 
     rss.items.select { |i| SHOWS.any? { |s| s =~ i.title.downcase } }.each do |i|
 
@@ -32,9 +32,9 @@ while !done
 
       unless Show.get(i.title)
         puts "Downloading: #{filename}"
-
+        
         open(filename, "wb") do |file|
-          file.write(Net::HTTP.get(URI.parse(i.link)))
+          file.write(Net::HTTP.get(URI.parse(i.enclosure.url)))
         end
 
         Show.create!(:name => i.title)
