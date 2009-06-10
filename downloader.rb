@@ -27,24 +27,23 @@ while !done
     rss = RSS::Parser.parse(open("http://www.mininova.org/rss.xml?user=EZTV"), false)
 
     rss.items.select { |i| SHOWS.any? { |s| s =~ i.title.downcase } }.each do |i|
+      unless IGNORE =~ i.title
+        filename = "#{i.title}.torrent"
 
-      filename = "#{i.title}.torrent"
+        unless Show.get(i.title)
+          puts "Downloading: #{filename}"
 
-      unless Show.get(i.title)
-        puts "Downloading: #{filename}"
-        
-        open(filename, "wb") do |file|
-          file.write(Net::HTTP.get(URI.parse(i.enclosure.url)))
+          open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(i.enclosure.url))) }
+
+          Show.create!(:name => i.title)
+
+          # Wrapped in a begin block until the DataMapper / Twitter conflict is resolved
+          begin
+            twitter_base.direct_message_create("sologigolos","#{i.title} just queued for download")
+          rescue Exception => e
+          end
+
         end
-
-        Show.create!(:name => i.title)
-
-        # Wrapped in a begin block until the DataMapper / Twitter conflict is resolved
-        begin
-          twitter_base.direct_message_create("sologigolos","#{i.title} just queued for download")
-        rescue Exception => e
-        end
-
       end
 
     end
