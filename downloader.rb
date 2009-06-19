@@ -24,7 +24,7 @@ while !done
 
   begin
     puts "Downloading feed..."
-    rss = RSS::Parser.parse(open("http://www.mininova.org/rss.xml?user=EZTV"), false)
+    rss = RSS::Parser.parse(open("http://rss.thepiratebay.org/user/d17c6a45441ce0bc0c057f19057f95e1"), false)
 
     rss.items.select { |i| SHOWS.any? { |s| s =~ i.title.downcase } }.each do |i|
       unless IGNORE =~ i.title
@@ -33,7 +33,7 @@ while !done
         unless Show.get(i.title)
           puts "Downloading: #{filename}"
 
-          open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(i.enclosure.url))) }
+          open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(i.link))) }
 
           Show.create!(:name => i.title)
 
