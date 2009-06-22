@@ -56,7 +56,7 @@ while true
     rss = RSS::Parser.parse(open(FEED_SOURCE), false)
 
     rss.items.select { |i| shows_regexp.any? { |s| s =~ i.title.downcase } }.each do |i|
-      unless (ignore_regexp.any? { |r| r =~ i.title } && Show.get(i.title))
+      unless (ignore_regexp.any? { |r| r =~ i.title } || Show.get(i.title))
         Helper.save_torrent_file(i)
       end
     end
