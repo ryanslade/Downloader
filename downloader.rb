@@ -1,4 +1,4 @@
-%w(rubygems rss/1.0 rss/2.0 open-uri net/http datamapper twitter).each { |lib| require lib }
+%w(rubygems rss/1.0 rss/2.0 open-uri net/http datamapper).each { |lib| require lib }
 
 class Show
 
@@ -23,28 +23,17 @@ class Helper
     open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(rss_item.link))) }
 
     Show.create!(:name => rss_item.title)
-
-    # Wrapped in a begin block until the DataMapper / Twitter conflict is resolved
-    begin
-      twitter_base.direct_message_create("sologigolos","#{rss_item.title} just queued for download")
-    rescue Exception => e
-    end
   end
 
 end
 
-FEED_SOURCE = "http://rss.thepiratebay.org/user/d17c6a45441ce0bc0c057f19057f95e1"
+FEED_SOURCE = "http://pipes.yahoo.com/pipes/pipe.run?_id=7aa6281616ea0a8cb27aaa0914f09a76&_render=rss"
 MINUTES = 10
-SHOWS = ["apprentice uk", "30 rock", "dollhouse", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood"]
+SHOWS = ["apprentice uk", "30 rock", "dollhouse", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung"]
 IGNORE = ["720"]
-TWITTER_USER = "sologigolos"
-TWITTER_PASSWORD = "Tw1tt3r17"
 
 DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
-
-httpauth = Twitter::HTTPAuth.new(TWITTER_USER, TWITTER_PASSWORD)
-twitter_base = Twitter::Base.new(httpauth)
 
 shows_regexp = Helper.string_to_regexp(SHOWS)
 ignore_regexp = Helper.string_to_regexp(IGNORE)
