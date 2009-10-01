@@ -29,7 +29,7 @@ end
 
 FEED_SOURCE = "http://pipes.yahoo.com/pipes/pipe.run?_id=7aa6281616ea0a8cb27aaa0914f09a76&_render=rss"
 MINUTES = 10
-SHOWS = ["apprentice uk", "30 rock", "dollhouse", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung"]
+SHOWS = ["apprentice uk", "30 rock", "dollhouse", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death", "flash forward"]
 IGNORE = ["720"]
 
 DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
