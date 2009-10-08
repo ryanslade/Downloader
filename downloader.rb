@@ -44,9 +44,9 @@ while true
     puts "Downloading feed..."
     rss = RSS::Parser.parse(open(FEED_SOURCE), false)
 
-    rss.items.select { |i| shows_regexp.any? { |s| s =~ i.title.downcase } }.each do |i|
-      unless (ignore_regexp.any? { |r| r =~ i.title } || Show.get(i.title))
-        Helper.save_torrent_file(i)
+    rss.items.select { |item| shows_regexp.any? { |s| s =~ item.title.downcase } }.each do |item|
+      unless ignore_regexp.any? { |r| r =~ item.title } || Show.get(item.title)
+        Helper.save_torrent_file(item)
       end
     end
 
