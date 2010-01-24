@@ -1,4 +1,4 @@
-%w(rubygems rss/1.0 rss/2.0 open-uri net/http datamapper).each { |lib| require lib }
+%w(rubygems rss/1.0 rss/2.0 addressable/uri net/http datamapper).each { |lib| require lib }
 
 FEED_SOURCE = "http://ezrss.it/feed/"
 MINUTES = 10
@@ -19,7 +19,7 @@ end
 def save_torrent_file(rss_item)
   filename = "#{rss_item.title}.torrent"
   puts "Downloading: #{filename}"
-  open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(rss_item.link))) }
+  open(filename, "wb") { |f| f.write(Net::HTTP.get(URI.parse(Addressable::URI.encode(rss_item.link)))) }
   Show.create!(:name => rss_item.title)
 end
 
