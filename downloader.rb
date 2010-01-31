@@ -2,7 +2,7 @@
 
 FEED_SOURCE = "http://ezrss.it/feed/"
 MINUTES = 10
-SHOWS = ["apprentice uk", "30 rock", "dollhouse", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
+SHOWS = ["apprentice uk", "30 rock", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
 IGNORE = ["720"]
 
 class Show
@@ -13,7 +13,7 @@ class Show
 end
 
 def string_to_regexp(input)
-  input.collect { |s| Regexp.new(s.gsub(" ", ".*")) }
+  input.collect { |s| Regexp.new(s.gsub(" ", ".*"), true) }
 end
 
 def save_torrent_file(rss_item)
@@ -25,6 +25,8 @@ end
 
 DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
+
+puts "#{Show.count} shows downloaded so far"
 
 shows_regexp = string_to_regexp(SHOWS)
 ignore_regexp = string_to_regexp(IGNORE)
