@@ -2,14 +2,14 @@
 
 FEED_SOURCE = "http://ezrss.it/feed/"
 MINUTES = 10
-SHOWS = ["apprentice uk", "30 rock", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
+SHOWS = ["breaking bad", "apprentice uk", "30 rock", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
 IGNORE = ["720"]
 
 class Show
   include DataMapper::Resource
 
   property :name, String, :key => true
-  property :created_at, DateTime, :default => Proc.new { Time.now }
+  property :created_at, DateTime, :default => Proc.new { Time.now.utc }
 end
 
 def string_to_regexp(input)
@@ -25,8 +25,6 @@ end
 
 DataMapper.setup(:default, "sqlite3:///#{Dir.pwd}/downloaded.db")
 DataMapper.auto_upgrade!
-
-puts "#{Show.count} shows downloaded so far"
 
 shows_regexp = string_to_regexp(SHOWS)
 ignore_regexp = string_to_regexp(IGNORE)
