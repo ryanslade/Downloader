@@ -1,8 +1,8 @@
 %w(rubygems rss/1.0 rss/2.0 addressable/uri net/http datamapper).each { |lib| require lib }
 
 FEED_SOURCE = "http://ezrss.it/feed/"
-MINUTES = 10
-SHOWS = ["breaking bad", "apprentice uk", "30 rock", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
+MINUTES = 60
+SHOWS = ["eastbound down", "inbetweeners", "modern family", "party down", "breaking bad", "apprentice uk", "30 rock", "gossip girl", "how met your mother", "big bang theory", "entourage", "true blood", "californication", "hung", "bored to death"]
 IGNORE = ["720"]
 
 class Show
